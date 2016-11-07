@@ -33,6 +33,7 @@ class SQLiteDataSource : public AddressBookModel
         virtual ErrorInfo getContact(Contact::ContactId id, Contact& c);
         virtual ErrorInfo getAllContacts(Contact::ContactRecordSet &rs);
         virtual ErrorInfo addContact(const Contact& c);
+        virtual ErrorInfo findContact(Contact::ContactId id, Contact& c,Contact::ContactRecordSet &rs);
         virtual ErrorInfo updateContact(Contact::ContactId id, const Contact&);
         virtual ErrorInfo deleteContact(Contact::ContactId id);
         virtual ErrorInfo deleteAllContacts();

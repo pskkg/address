@@ -10,7 +10,8 @@ QtContactForm::QtContactForm(QWidget *parent) :
         lastNameField(new QLineEdit()),
         addressField(new QLineEdit()),
         phoneNumberField(new QLineEdit()),
-        emailField(new QLineEdit())
+        emailField(new QLineEdit()),
+        bgpField(new QLineEdit())
 
 {
     QPalette palette;
@@ -36,6 +37,10 @@ QtContactForm::QtContactForm(QWidget *parent) :
     emailField->setFont(font);
     emailField->setPalette(palette);
     addRow("Email", emailField);
+    bgpField->setPlaceholderText("Enter Your Blood Group");
+    bgpField->setFont(font);
+    bgpField->setPalette(palette);
+    addRow("Blood Group", bgpField);
 }
 
 void QtContactForm::clear()
@@ -45,4 +50,5 @@ void QtContactForm::clear()
     addressField->setText("");
     phoneNumberField->setText("");
     emailField->setText("");
+    bgpField->setText("");
 }

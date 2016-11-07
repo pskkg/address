@@ -45,11 +45,13 @@ void QtAddressBookGUI::createWidgets()
     newContactButton->setIcon(QIcon("D:/qt/address-book-master/1.jpg"));
     editContactButton = new QPushButton("Edit");
     deleteContactButton = new QPushButton("Delete");
+    findContactButton = new QPushButton("Find");
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addWidget(newContactButton);
     buttonLayout->addWidget(editContactButton);
     buttonLayout->addWidget(deleteContactButton);
+    buttonLayout->addWidget(findContactButton);
 
     QVBoxLayout *rightSideLayout = new QVBoxLayout();
     rightSideLayout->addWidget(detailView);
@@ -73,6 +75,8 @@ void QtAddressBookGUI::createWidgets()
 
     connect(editContactButton, SIGNAL(clicked()),
             this, SLOT(editContact()));
+    connect(findContactButton, SIGNAL(clicked()),
+            this, SLOT(findContact()));
 
     //tell the sub-widgets to refresh their data from
     //
@@ -206,5 +210,10 @@ void QtAddressBookGUI::deleteContact()
         delete errDialog;
         return;
     }
+}
+void QtAddressBookGUI::findContact()
+{
+
+    return;
 }
 

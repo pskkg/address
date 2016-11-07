@@ -9,6 +9,7 @@
 #include "contact.h"
 #include "errorinfo.h"
 #include "sqliteutils.h"
+#include "qtaddressbookgui.h"
 
 
 //Non Member Utility Functions
@@ -36,7 +37,8 @@ void SQLiteDataSource::createTable()
                         "lastname TEXT NOT NULL,"
                         "phonenum TEXT NOT NULL,"
                         "address TEXT,"
-                        "email TEXT);";
+                        "email TEXT,"
+                        "bgp TEXT);";
 
     SQLiteStatementHandle createTableStatement(sqlStr, database.get());
 
@@ -112,13 +114,14 @@ void SQLiteDataSource::fillContactFromRow(sqlite3_stmt *s, Contact& c)
     c.phoneNumber = reinterpret_cast<const char*>(sqlite3_column_text(s, 3));
     c.address = reinterpret_cast<const char*>(sqlite3_column_text(s, 4));
     c.email = reinterpret_cast<const char*>(sqlite3_column_text(s, 5));
+    c.bgp = reinterpret_cast <const char*>(sqlite3_column_text(s,6));
 }
 
 
 ErrorInfo SQLiteDataSource::getContact(Contact::ContactId id, Contact& c)
 {
     //create sql prepared statement
-    std::string sqlStr = "SELECT * FROM Contacts WHERE id=?;"; 
+    std::string sqlStr = "SELECT * FROM Contacts WHERE id=?;";
 
     SQLiteStatementHandle queryStatement(sqlStr, database.get());
 
@@ -142,7 +145,7 @@ ErrorInfo SQLiteDataSource::getContact(Contact::ContactId id, Contact& c)
 ErrorInfo SQLiteDataSource::getAllContacts(Contact::ContactRecordSet &rs)
 {
     //create sql prepared statement
-    std::string sqlStr = "SELECT * FROM Contacts;"; 
+    std::string sqlStr = "SELECT * FROM Contacts;";
 
     SQLiteStatementHandle queryStatement(sqlStr, database.get());
 
@@ -178,7 +181,7 @@ ErrorInfo SQLiteDataSource::addContact(const Contact& c)
 {
     //create sql prepared statement
     std::string sqlStr = "INSERT INTO Contacts VALUES("
-                        "NULL,?,?,?,?,?);";
+                        "NULL,?,?,?,?,?,?);";
     
     SQLiteStatementHandle insertStatement(sqlStr, database.get()); 
 
@@ -189,6 +192,7 @@ ErrorInfo SQLiteDataSource::addContact(const Contact& c)
     sqlite3_bind_text(insertStatement.get(), 3, c.phoneNumber.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStatement.get(), 4, c.address.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(insertStatement.get(), 5, c.email.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(insertStatement.get(), 6, c.bgp.c_str(), -1, SQLITE_STATIC);
 
     //execute SQL statement & check results
     int stepResult = sqlite3_step(insertStatement.get());
@@ -210,16 +214,16 @@ ErrorInfo SQLiteDataSource::updateContact(Contact::ContactId id, const Contact& 
     std::string sqlStr = "UPDATE Contacts SET "
                          "firstname=?, lastname=?,"
                          "phonenum=?, address=?,"
-                         "email=? WHERE id=?;"; 
+                         "email=? , bgp=?, WHERE id=?;";
     
-    SQLiteStatementHandle updateStatement(sqlStr, database.get()); 
+    SQLiteStatementHandle updateStatement(sqlStr, database.get());
 
     sqlite3_bind_text(updateStatement.get(), 1, c.firstName.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(updateStatement.get(), 2, c.lastName.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(updateStatement.get(), 3, c.phoneNumber.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(updateStatement.get(), 4, c.address.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(updateStatement.get(), 5, c.email.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int(updateStatement.get(), 6, id);
+    sqlite3_bind_text(updateStatement.get(), 6, c.bgp.c_str(), -1, SQLITE_STATIC);
 
     //execute SQL statement & check results
     int stepResult = sqlite3_step(updateStatement.get());
@@ -261,7 +265,7 @@ ErrorInfo SQLiteDataSource::deleteContact(Contact::ContactId id)
 ErrorInfo SQLiteDataSource::deleteAllContacts()
 {
     //create sql prepared statement
-    std::string sqlStr = "DELETE FROM Contacts;"; 
+    std::string sqlStr = "DELETE FROM Contacts;";
     
     SQLiteStatementHandle deleteAllStatement(sqlStr, database.get()); 
 
@@ -278,3 +282,25 @@ ErrorInfo SQLiteDataSource::deleteAllContacts()
     return ErrorInfo(ERR_OK, "OK");
 }
 
+
+ErrorInfo SQLiteDataSource::findContact(Contact::ContactId id, Contact& c, Contact::ContactRecordSet &rs)
+{
+    //create sql prepared statement
+    std::string sqlStr = "SELECT * from Contacts WHERE firstname=?;";
+
+    SQLiteStatementHandle queryStatement(sqlStr, database.get());
+
+    sqlite3_bind_text(queryStatement.get(), 1, c.firstName.c_str(), -1, SQLITE_STATIC);
+
+    //execute SQL statement & check results
+    int stepResult = sqlite3_step(queryStatement.get());
+
+    if(stepResult != SQLITE_DONE)
+    {
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not update contact.");
+    }
+
+    notifyViews();
+
+    return ErrorInfo(ERR_OK, "OK");
+}

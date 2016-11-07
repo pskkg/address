@@ -32,6 +32,7 @@ class AddressBookModel
 
         virtual ErrorInfo getContact(Contact::ContactId id, Contact& c) = 0;
         virtual ErrorInfo getAllContacts(Contact::ContactRecordSet &rs) = 0;
+        virtual ErrorInfo findContact(Contact::ContactId id, Contact& c, Contact::ContactRecordSet &rs)= 0;
         virtual ErrorInfo addContact(const Contact& c) = 0;
         virtual ErrorInfo updateContact(Contact::ContactId id, const Contact& c) = 0;
         virtual ErrorInfo deleteContact(Contact::ContactId id)=0;
