@@ -286,7 +286,7 @@ ErrorInfo SQLiteDataSource::deleteAllContacts()
 ErrorInfo SQLiteDataSource::findContact(Contact::ContactId id, Contact& c, Contact::ContactRecordSet &rs)
 {
     //create sql prepared statement
-    std::string sqlStr = "SELECT * from Contacts WHERE firstname=?;";
+    std::string sqlStr = "SELECT * from Contacts WHERE firstName=?;";
 
     SQLiteStatementHandle queryStatement(sqlStr, database.get());
 
@@ -297,7 +297,7 @@ ErrorInfo SQLiteDataSource::findContact(Contact::ContactId id, Contact& c, Conta
 
     if(stepResult != SQLITE_DONE)
     {
-        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not update contact.");
+        return ErrorInfo(ERR_DATASOURCE_ERROR, "Could not retrive contact.");
     }
 
     notifyViews();

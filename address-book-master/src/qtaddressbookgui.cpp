@@ -213,7 +213,7 @@ void QtAddressBookGUI::deleteContact()
 }
 void QtAddressBookGUI::findContact()
 {
-
     return;
 }
+
 
