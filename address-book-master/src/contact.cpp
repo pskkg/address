@@ -37,7 +37,7 @@ bool Contact::isEmpty() const
         return false;
     }
 }
-   bool Contact::isvalidphone()const
+   bool Contact::isValidPhone()const
    {
        bool length=(phoneNumber.length()==10);
        int num=1;

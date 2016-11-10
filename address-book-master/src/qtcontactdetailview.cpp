@@ -20,7 +20,7 @@ QtContactDetailView::QtContactDetailView(AddressBookModel& model,
     contactForm->addressField->setReadOnly(true);
     contactForm->phoneNumberField->setReadOnly(true);
     contactForm->emailField->setReadOnly(true);
-     contactForm->bgpField->setReadOnly(true);
+    contactForm->bgpField->setReadOnly(true);
 
     setLayout(contactForm);
     setFlat(false);
